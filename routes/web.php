@@ -26,6 +26,9 @@ use App\Http\Controllers\delStory;
 use App\Http\Controllers\adminUsers;
 use App\Http\Controllers\MsgController;
 use App\Http\Controllers\ThoughtsController;
+use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\BookStoreController;
+use App\Http\Controllers\AdminBookController;
 use Illuminate\Support\Facades\DB;
 // display index elements 
 Route::get('/', [App\Http\Controllers\IndexController::class, 'idexDisplay']);
@@ -123,51 +126,66 @@ Route::get('/disclm', function () {
 
 Route::post('/help', [HelpController::class, 'show']);
 
+// Book Store (User Panel)
+Route::get('/books', [BookStoreController::class, 'books']);
+Route::post('/books/cart/add/{bookId}', [BookStoreController::class, 'addToCart']);
+Route::post('/books/buy/{bookId}', [BookStoreController::class, 'buyNow']);
+Route::get('/cart', [BookStoreController::class, 'cart']);
+Route::post('/cart/update/{cartId}', [BookStoreController::class, 'updateCart']);
+Route::post('/cart/remove/{cartId}', [BookStoreController::class, 'removeFromCart']);
+Route::post('/checkout/razorpay/order', [BookStoreController::class, 'createRazorpayOrder']);
+Route::post('/checkout/razorpay/verify', [BookStoreController::class, 'verifyRazorpayPayment']);
+Route::get('/my-orders', [BookStoreController::class, 'myOrders']);
+Route::post('/books/free/{bookId}/claim', [BookStoreController::class, 'claimFreeBook']);
+Route::get('/my-library', [BookStoreController::class, 'myLibrary']);
+Route::get('/books/read/{bookId}', [BookStoreController::class, 'readBook']);
+Route::get('/books/resale', [BookStoreController::class, 'resaleMarket']);
+Route::post('/books/resale/list/{orderItemId}', [BookStoreController::class, 'createResaleListing']);
+Route::post('/books/resale/buy/{listingId}', [BookStoreController::class, 'buyResale']);
+
 
 // Admin Related services
 
-Route::get('/admin', function () {
-    return view('admin.login');
-});
+Route::get('/admin', [AdminAuthController::class, 'showLogin']);
+Route::post('/admin', [AdminAuthController::class, 'login']);
+Route::post('/admin/logout', [AdminAuthController::class, 'logout']);
+Route::get('/AdLog', [AdminAuthController::class, 'showLogin']);
 
+Route::middleware('admin.auth')->group(function () {
+    Route::get('/dashboard', [dashController::class, 'show']);
 
-Route::get('/dashboard', [dashController::class, 'show']);
+    Route::get('/dash',  [dashController::class, 'dash']);
 
-Route::get('/dash',  [dashController::class, 'dash']);
+    Route::get('/wrst', [typestrupnw::class, 'show']);
 
-Route::get('/wrst', [typestrupnw::class, 'show']);
+    Route::get('/edst', [editStory::class,'show']);
+    Route::get('/cmntget', function () {
+        return view('admin.comments');
+    });
 
-Route::get('/edst', [editStory::class,'show']);
-Route::get('/cmntget', function () {
-    return view('admin.comments');
-});
+    Route::get('/admin/books', [AdminBookController::class, 'booksPage']);
+    Route::post('/admin/books', [AdminBookController::class, 'addBook']);
+    Route::post('/admin/books/update/{bookId}', [AdminBookController::class, 'updateBook']);
+    Route::post('/admin/books/delete/{bookId}', [AdminBookController::class, 'deleteBook']);
+    Route::post('/admin/orders/update/{orderId}', [AdminBookController::class, 'updateOrderStatus']);
+    Route::get('/modist/{stid}', [updateEditedStory::class,'show']);
 
-Route::get('/books', function () {
-    return view('admin.books');
-});
-Route::get('/modist/{stid}', [updateEditedStory::class,'show']);
+    Route::post('/strupnw', [wrtieNewStory::class, 'show']);
 
-Route::post('/strupnw', [wrtieNewStory::class, 'show']);
+    Route::post('/updsted', [finallyUpdateStory::class, 'show']);
 
-Route::post('/updsted', [finallyUpdateStory::class, 'show']);
+    Route::get('/strupnw', function(){
+        return view('errors.404');
+    });
+    Route::post('/delistlo',[delStory::class,'show']);
 
-Route::get('/strupnw', function(){
-    return view('errors.404');
-
-});
-Route::post('/delistlo',[delStory::class,'show']);
-
-Route::get('/thgt',function(){
-
+    Route::get('/thgt',function(){
         $th=  DB::table('thoughts')->select('Mainthought')->get();
-     
-    return view('admin.thoughts')->with(['thgt'=>$th]);
-});
-Route::post('/thgt',[ThoughtsController::class,'show'] );
-Route::get('/ussr', [adminUsers::class,'show']);
 
-Route::get('/msg', [MsgController::class,'show']);
+        return view('admin.thoughts')->with(['thgt'=>$th]);
+    });
+    Route::post('/thgt',[ThoughtsController::class,'show'] );
+    Route::get('/ussr', [adminUsers::class,'show']);
 
-Route::get('/AdLog',function(){
-        return view('admin.navFooter.Alogin');
+    Route::get('/msg', [MsgController::class,'show']);
 });

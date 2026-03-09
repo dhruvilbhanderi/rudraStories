@@ -30,7 +30,13 @@
                     <li id="da2026" class="das"><i class="fa fa-user"></i>Users</li>
                     <li id="da2027" class="das"><i class="fa fa-commenting-o"></i>Messages</li>
                     <li id="da2028" class="das"><i class="fa fa-comments"></i>Comments</li>
-                    <li id="da2029" class="das"><i class="fa fa-sign-out"></i><a href="">Logout</a></li>
+                    <li id="da2029" class="das">
+                        <i class="fa fa-sign-out"></i>
+                        <form method="POST" action="/admin/logout" style="display:inline;">
+                            @csrf
+                            <button type="submit" style="background:none;border:none;color:inherit;padding:0;cursor:pointer;">Logout</button>
+                        </form>
+                    </li>
                 </ul>
             </div>
         </div>

@@ -30,7 +30,7 @@ $('#da2025').click(function (e) {
 
     $.ajax({
         type: "get",
-        url: "/books",
+        url: "/admin/books",
         beforeSend: function(){
             $('#ch10ngcon').append("<div class='loader'></div>");
         },
@@ -178,7 +178,6 @@ $('#da2028').click(function (e) {
         }
     });
 }); 
-
 
 
 

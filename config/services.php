@@ -30,4 +30,15 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'admin' => [
+        'username' => env('ADMIN_USERNAME', 'admin'),
+        'password' => env('ADMIN_PASSWORD', 'admin123'),
+    ],
+
+    'razorpay' => [
+        'key_id' => env('RAZORPAY_KEY_ID', 'rzp_test_SKq1zrjlvYCN1q'),
+        'key_secret' => env('RAZORPAY_KEY_SECRET', 'RAS0NAfWwkuZAdx6G7ELdXFu'),
+        'webhook_secret' => env('RAZORPAY_WEBHOOK_SECRET', ''),
+    ],
+
 ];

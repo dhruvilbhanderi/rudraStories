@@ -131,7 +131,13 @@
                 <li><a href="/">Home</a></li>
                 <li><a href="/all_stories" target="_blank">Stories</a></li>
                 <li><a href="/category" target="_blank">Categories</a></li>
-                <li><a href="#">Books</a></li>
+                <li><a href="/books">Books</a></li>
+                @if (session()->has(['usnm', 'loginstat']))
+                    <li><a href="/cart">Cart</a></li>
+                    <li><a href="/my-orders">My Orders</a></li>
+                    <li><a href="/my-library">My Library</a></li>
+                    <li><a href="/books/resale">Resale Market</a></li>
+                @endif
                 <li><a href="/about_me">About Us</a></li>
             </ul>
 

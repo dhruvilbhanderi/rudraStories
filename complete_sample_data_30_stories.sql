@@ -176,3 +176,12 @@ INSERT INTO `subs` (`Subscriber_Identy`, `Subscriber_Email`, `created_at`, `upda
 -- 6. 30 comments distributed across different stories
 -- 7. After importing, you can click on any story and it should work!
 -- ============================================
+
+-- ============================================
+-- 7. Sample Books (for new Books/Cart/Order module)
+-- ============================================
+INSERT INTO `books_store` (`title`, `author`, `description`, `price`, `stock`, `cover_image`, `is_active`, `created_at`, `updated_at`) VALUES
+('The Writer''s Mind', 'Rudra', 'A practical guide for story writers.', 299.00, 25, NULL, 1, NOW(), NOW()),
+('Shadows Of Time', 'Manish Pandey', 'Fiction anthology with thrilling short stories.', 399.00, 18, NULL, 1, NOW(), NOW()),
+('Story Craft Gujarati', 'Dev Team', 'Gujarati storytelling framework for beginners.', 249.00, 30, NULL, 1, NOW(), NOW()),
+('Epic Tales Collection', 'Rudra Stories', 'A curated collection of readers'' favorite tales.', 499.00, 12, NULL, 1, NOW(), NOW());

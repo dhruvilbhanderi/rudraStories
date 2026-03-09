@@ -164,6 +164,87 @@ CREATE TABLE IF NOT EXISTS `helpquery` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
+-- Table: books_store
+-- Description: Books catalog for user/admin panel
+-- ============================================
+CREATE TABLE IF NOT EXISTS `books_store` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `author` varchar(255) NOT NULL,
+  `description` text,
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `stock` int(11) NOT NULL DEFAULT '0',
+  `cover_image` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================
+-- Table: cart_items
+-- Description: User cart items
+-- ============================================
+CREATE TABLE IF NOT EXISTS `cart_items` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_identity` varchar(255) NOT NULL,
+  `book_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `cart_user_identity_idx` (`user_identity`),
+  KEY `cart_book_id_idx` (`book_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================
+-- Table: book_orders
+-- Description: User orders with payment details
+-- ============================================
+CREATE TABLE IF NOT EXISTS `book_orders` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_number` varchar(50) NOT NULL,
+  `user_identity` varchar(255) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `full_name` varchar(120) NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  `address_line` varchar(255) NOT NULL,
+  `city` varchar(120) NOT NULL,
+  `state` varchar(120) NOT NULL,
+  `pincode` varchar(12) NOT NULL,
+  `payment_method` varchar(20) NOT NULL,
+  `payment_status` varchar(20) NOT NULL DEFAULT 'pending',
+  `payment_reference` varchar(100) DEFAULT NULL,
+  `order_status` varchar(20) NOT NULL DEFAULT 'processing',
+  `subtotal_amount` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `total_amount` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `order_number_unique` (`order_number`),
+  KEY `orders_user_identity_idx` (`user_identity`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================
+-- Table: book_order_items
+-- Description: Line items for each order
+-- ============================================
+CREATE TABLE IF NOT EXISTS `book_order_items` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` int(11) NOT NULL,
+  `book_id` int(11) NOT NULL,
+  `book_title` varchar(255) NOT NULL,
+  `quantity` int(11) NOT NULL DEFAULT '1',
+  `unit_price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `line_total` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `order_items_order_id_idx` (`order_id`),
+  KEY `order_items_book_id_idx` (`book_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================
 -- Laravel Standard Tables (if needed)
 -- ============================================
 
