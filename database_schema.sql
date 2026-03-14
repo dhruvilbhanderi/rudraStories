@@ -182,6 +182,27 @@ CREATE TABLE IF NOT EXISTS `books_store` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
+-- Table: support_chat_messages
+-- Description: Real-time support chat with files
+-- ============================================
+CREATE TABLE IF NOT EXISTS `support_chat_messages` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `chat_token` varchar(80) NOT NULL,
+  `sender_type` varchar(10) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `message` text,
+  `file_path` varchar(255) DEFAULT NULL,
+  `file_name` varchar(255) DEFAULT NULL,
+  `file_mime` varchar(120) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `support_chat_messages_chat_token_index` (`chat_token`),
+  KEY `support_chat_messages_sender_type_index` (`sender_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================
 -- Table: cart_items
 -- Description: User cart items
 -- ============================================

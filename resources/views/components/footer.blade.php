@@ -1,17 +1,23 @@
-<div class="help">  
+<div class="help" id="support-chat-widget" data-ws-url="{{ env('CHAT_WS_URL', 'ws://127.0.0.1:6001') }}">
   <div class="helpque " id="helpque10">
     <div class="hd">
-      <h4> Leave a Massege for us </h4>
+      <h4>Support Chat</h4>
     </div>
-    <form action="" method="post" id="hlpfr252">
+    <div style="margin:6px 0 10px;">
+      <a href="/support-chat" style="font-weight:600;color:#1d3557;text-decoration:underline;">Open Full Support Chat Page</a>
+    </div>
+    <div id="chat-history" style="max-height:240px;overflow-y:auto;background:#fff;padding:8px;border:1px solid #ddd;margin-bottom:10px;"></div>
+    <form action="" method="post" id="hlpfr252" enctype="multipart/form-data">
       <label for="">Name :</label>
-      <input type="text" name="nm45226" id="n12001">
+      <input type="text" name="nm45226" id="chatName">
       <label for="">Email :</label>
-      <input type="text" name="em45226" id="n12001">
+      <input type="text" name="em45226" id="chatEmail">
       @csrf
-      <label for="">Massege :</label>
-      <textarea name="msg45226" id="n12001" cols="30" rows="10"></textarea>
-       <input type="submit" name="sub120" value="SEND" id="s55214" class="ms45snd">
+      <label for="">Message :</label>
+      <textarea name="msg45226" id="chatMessage" cols="30" rows="4"></textarea>
+      <label for="">File :</label>
+      <input type="file" name="chat_file" id="chatFile">
+      <input type="submit" name="sub120" value="SEND" id="s55214" class="ms45snd">
     </form>
   </div>
   <div class="helpic" id="ophl22">

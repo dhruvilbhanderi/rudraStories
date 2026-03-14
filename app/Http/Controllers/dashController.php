@@ -33,7 +33,10 @@ class dashController extends Controller
         return  DB::table('usersignupinfo')->get()->count();
     }
     function msgcnt(){
-        
-        return  DB::table('helpquery')->get()->count();
+        if (!DB::getSchemaBuilder()->hasTable('support_chat_messages')) {
+            return DB::table('helpquery')->count();
+        }
+
+        return DB::table('support_chat_messages')->count();
     }
 }

@@ -138,6 +138,7 @@
                     <li><a href="/my-library">My Library</a></li>
                     <li><a href="/books/resale">Resale Market</a></li>
                 @endif
+                <li><a href="/support-chat">Support Chat</a></li>
                 <li><a href="/about_me">About Us</a></li>
             </ul>
 

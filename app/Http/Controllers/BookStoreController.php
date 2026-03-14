@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Str;
 
 class BookStoreController extends Controller
 {
@@ -688,8 +687,15 @@ class BookStoreController extends Controller
 
     public function buyResale($listingId)
     {
+        return redirect('/books/resale')->with('book_error', 'Direct resale buy is disabled. Please pay via Razorpay checkout.');
+    }
+
+    public function createResaleRazorpayOrder($listingId)
+    {
         if (! session()->has(['usnm', 'loginstat', 'usiden'])) {
-            return redirect('/Log_In')->with('notmatch', 'Please login first.');
+            return response()->json([
+                'message' => 'Please login first.',
+            ], 401);
         }
 
         $listing = DB::table('book_resale_listings')
@@ -698,11 +704,23 @@ class BookStoreController extends Controller
             ->first();
 
         if (! $listing) {
-            return redirect('/books/resale')->with('book_error', 'Listing not available.');
+            return response()->json([
+                'message' => 'Listing not available.',
+            ], 404);
         }
 
         if ((string) $listing->seller_identity === (string) session('usiden')) {
-            return redirect('/books/resale')->with('book_error', 'You cannot buy your own listing.');
+            return response()->json([
+                'message' => 'You cannot buy your own listing.',
+            ], 422);
+        }
+
+        $razorpayKey = (string) config('services.razorpay.key_id');
+        $razorpaySecret = (string) config('services.razorpay.key_secret');
+        if ($razorpayKey === '' || $razorpaySecret === '') {
+            return response()->json([
+                'message' => 'Razorpay is not configured. Set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in .env',
+            ], 500);
         }
 
         DB::beginTransaction();
@@ -719,9 +737,9 @@ class BookStoreController extends Controller
                 'city' => '-',
                 'state' => '-',
                 'pincode' => '-',
-                'payment_method' => 'resale',
-                'payment_status' => 'paid',
-                'payment_reference' => 'RSL-' . strtoupper(Str::random(10)),
+                'payment_method' => 'resale_razorpay',
+                'payment_status' => 'pending',
+                'payment_reference' => null,
                 'order_status' => 'processing',
                 'subtotal_amount' => $listing->price,
                 'total_amount' => $listing->price,
@@ -744,13 +762,133 @@ class BookStoreController extends Controller
                 'updated_at' => now(),
             ]);
 
-            DB::table('book_resale_listings')->where('id', $listingId)->update([
+            $razorpayOrder = Http::withBasicAuth($razorpayKey, $razorpaySecret)
+                ->asForm()
+                ->post('https://api.razorpay.com/v1/orders', [
+                    'amount' => (int) round(((float) $listing->price) * 100),
+                    'currency' => 'INR',
+                    'receipt' => $orderNumber,
+                    'notes[listng_id]' => (string) $listingId,
+                    'notes[user_identity]' => (string) session('usiden'),
+                ]);
+
+            if (! $razorpayOrder->ok() || ! isset($razorpayOrder['id'])) {
+                throw new \RuntimeException('Unable to create Razorpay order for resale');
+            }
+
+            DB::table('book_orders')->where('id', $orderId)->update([
+                'payment_reference' => (string) $razorpayOrder['id'],
+                'updated_at' => now(),
+            ]);
+
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Unable to create resale payment order.',
+            ], 500);
+        }
+
+        return response()->json([
+            'message' => 'Resale Razorpay order created.',
+            'key' => $razorpayKey,
+            'amount' => (int) round(((float) $listing->price) * 100),
+            'currency' => 'INR',
+            'razorpay_order_id' => (string) $razorpayOrder['id'],
+            'internal_order_id' => (int) $orderId,
+            'listing_id' => (int) $listingId,
+            'customer_name' => session('usnm'),
+            'customer_phone' => '',
+        ]);
+    }
+
+    public function verifyResaleRazorpayPayment(Request $request)
+    {
+        if (! session()->has(['usnm', 'loginstat', 'usiden'])) {
+            return response()->json([
+                'message' => 'Please login first.',
+            ], 401);
+        }
+
+        $request->validate([
+            'internal_order_id' => ['required', 'integer'],
+            'listing_id' => ['required', 'integer'],
+            'razorpay_payment_id' => ['required', 'string', 'max:100'],
+            'razorpay_order_id' => ['required', 'string', 'max:100'],
+            'razorpay_signature' => ['required', 'string', 'max:255'],
+        ]);
+
+        $order = DB::table('book_orders')
+            ->where('id', (int) $request->internal_order_id)
+            ->where('user_identity', session('usiden'))
+            ->where('payment_method', 'resale_razorpay')
+            ->first();
+
+        if (! $order) {
+            return response()->json([
+                'message' => 'Resale order not found.',
+            ], 404);
+        }
+
+        if ((string) $order->payment_status === 'paid') {
+            return response()->json([
+                'message' => 'Payment already verified.',
+            ]);
+        }
+
+        $secret = (string) config('services.razorpay.key_secret');
+        $payload = $request->razorpay_order_id . '|' . $request->razorpay_payment_id;
+        $generatedSignature = hash_hmac('sha256', $payload, $secret);
+        $signatureIsValid = hash_equals($generatedSignature, (string) $request->razorpay_signature);
+
+        if (! $signatureIsValid) {
+            DB::table('book_orders')->where('id', $order->id)->update([
+                'payment_status' => 'failed',
+                'updated_at' => now(),
+            ]);
+
+            return response()->json([
+                'message' => 'Payment signature mismatch.',
+            ], 422);
+        }
+
+        DB::beginTransaction();
+        try {
+            $listing = DB::table('book_resale_listings')
+                ->where('id', (int) $request->listing_id)
+                ->lockForUpdate()
+                ->first();
+
+            if (! $listing || $listing->status !== 'active') {
+                throw new \RuntimeException('Listing already sold.');
+            }
+
+            if ((string) $listing->seller_identity === (string) session('usiden')) {
+                throw new \RuntimeException('You cannot buy your own listing.');
+            }
+
+            $orderItem = DB::table('book_order_items')
+                ->where('order_id', $order->id)
+                ->first();
+
+            if (! $orderItem || (int) $orderItem->book_id !== (int) $listing->book_id) {
+                throw new \RuntimeException('Resale order item mismatch.');
+            }
+
+            DB::table('book_orders')->where('id', $order->id)->update([
+                'payment_status' => 'paid',
+                'payment_reference' => $request->razorpay_payment_id,
+                'updated_at' => now(),
+            ]);
+
+            DB::table('book_resale_listings')->where('id', $listing->id)->update([
                 'status' => 'sold',
                 'buyer_identity' => session('usiden'),
                 'sold_at' => now(),
                 'updated_at' => now(),
             ]);
 
+            $book = DB::table('books_store')->where('id', $listing->book_id)->first();
             if ($book && $book->pdf_file) {
                 DB::table('user_book_access')->updateOrInsert(
                     [
@@ -760,7 +898,7 @@ class BookStoreController extends Controller
                     [
                         'username' => session('usnm'),
                         'source' => 'resale',
-                        'order_id' => $orderId,
+                        'order_id' => $order->id,
                         'is_active' => 1,
                         'created_at' => now(),
                         'updated_at' => now(),
@@ -771,10 +909,19 @@ class BookStoreController extends Controller
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollBack();
-            return redirect('/books/resale')->with('book_error', 'Unable to complete resale order.');
+            DB::table('book_orders')->where('id', $order->id)->update([
+                'payment_status' => 'failed',
+                'updated_at' => now(),
+            ]);
+
+            return response()->json([
+                'message' => 'Resale payment verification failed: ' . $e->getMessage(),
+            ], 422);
         }
 
-        return redirect('/my-orders')->with('book_success', 'Resale order placed successfully.');
+        return response()->json([
+            'message' => 'Resale payment successful and order confirmed.',
+        ]);
     }
 
     private function cartCount()

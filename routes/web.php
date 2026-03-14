@@ -29,6 +29,7 @@ use App\Http\Controllers\ThoughtsController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\BookStoreController;
 use App\Http\Controllers\AdminBookController;
+use App\Http\Controllers\AdminCommentsController;
 use Illuminate\Support\Facades\DB;
 // display index elements 
 Route::get('/', [App\Http\Controllers\IndexController::class, 'idexDisplay']);
@@ -37,6 +38,10 @@ Route::get('/all_stories', [App\Http\Controllers\AllStoryController::class, 'sho
 
 Route::get('/about_me', function () {
     return  view('homeAndStories.aboutme');
+});
+
+Route::get('/support-chat', function () {
+    return view('homeAndStories.support_chat');
 });
 
 // all category
@@ -125,6 +130,8 @@ Route::get('/disclm', function () {
 
 
 Route::post('/help', [HelpController::class, 'show']);
+Route::get('/chat/session', [HelpController::class, 'sessionInfo']);
+Route::get('/chat/messages', [HelpController::class, 'messages']);
 
 // Book Store (User Panel)
 Route::get('/books', [BookStoreController::class, 'books']);
@@ -142,6 +149,8 @@ Route::get('/books/read/{bookId}', [BookStoreController::class, 'readBook']);
 Route::get('/books/resale', [BookStoreController::class, 'resaleMarket']);
 Route::post('/books/resale/list/{orderItemId}', [BookStoreController::class, 'createResaleListing']);
 Route::post('/books/resale/buy/{listingId}', [BookStoreController::class, 'buyResale']);
+Route::post('/books/resale/razorpay/order/{listingId}', [BookStoreController::class, 'createResaleRazorpayOrder']);
+Route::post('/books/resale/razorpay/verify', [BookStoreController::class, 'verifyResaleRazorpayPayment']);
 
 
 // Admin Related services
@@ -159,9 +168,7 @@ Route::middleware('admin.auth')->group(function () {
     Route::get('/wrst', [typestrupnw::class, 'show']);
 
     Route::get('/edst', [editStory::class,'show']);
-    Route::get('/cmntget', function () {
-        return view('admin.comments');
-    });
+    Route::get('/cmntget', [AdminCommentsController::class, 'index']);
 
     Route::get('/admin/books', [AdminBookController::class, 'booksPage']);
     Route::post('/admin/books', [AdminBookController::class, 'addBook']);
@@ -188,4 +195,7 @@ Route::middleware('admin.auth')->group(function () {
     Route::get('/ussr', [adminUsers::class,'show']);
 
     Route::get('/msg', [MsgController::class,'show']);
+    Route::get('/admin/chat/sessions', [MsgController::class, 'sessions']);
+    Route::get('/admin/chat/sessions/{chatToken}/messages', [MsgController::class, 'messages']);
+    Route::post('/admin/chat/sessions/{chatToken}/messages', [MsgController::class, 'send']);
 });
