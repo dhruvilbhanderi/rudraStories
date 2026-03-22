@@ -74,15 +74,29 @@ class HelpController extends Controller
         $fileName = null;
         $fileMime = null;
         if ($request->hasFile('chat_file')) {
-            if (!File::exists(public_path('supportChat'))) {
-                File::makeDirectory(public_path('supportChat'), 0755, true);
-            }
             $file = $request->file('chat_file');
-            $storedName = time().'_'.Str::random(10).'_'.$file->getClientOriginalName();
-            $file->move(public_path('supportChat'), $storedName);
-            $filePath = 'supportChat/'.$storedName;
             $fileName = $file->getClientOriginalName();
             $fileMime = $file->getMimeType();
+
+            if (str_starts_with($fileMime, 'image/')) {
+                $response = Http::attach(
+                    'image', file_get_contents($file->getRealPath()), $fileName
+                )->post('https://api.imgbb.com/1/upload', [
+                    'key' => '12970868fe9200f5331c2d9579d429ea',
+                ]);
+                if ($response->successful()) {
+                    $filePath = $response->json('data.url');
+                } else {
+                    return response()->json(['message' => 'ImgBB image upload failed.'], 500);
+                }
+            } else {
+                if (!File::exists(public_path('supportChat'))) {
+                    File::makeDirectory(public_path('supportChat'), 0755, true);
+                }
+                $storedName = time().'_'.Str::random(10).'_'.$fileName;
+                $file->move(public_path('supportChat'), $storedName);
+                $filePath = 'supportChat/'.$storedName;
+            }
         }
 
         $message = SupportChatMessage::create([
@@ -131,7 +145,7 @@ class HelpController extends Controller
             'name' => $item->name,
             'email' => $item->email,
             'message' => $item->message,
-            'file_url' => $item->file_path ? asset($item->file_path) : null,
+            'file_url' => $item->file_path ? (filter_var($item->file_path, FILTER_VALIDATE_URL) ? $item->file_path : asset($item->file_path)) : null,
             'file_name' => $item->file_name,
             'file_mime' => $item->file_mime,
             'created_at' => optional($item->created_at)->toDateTimeString(),

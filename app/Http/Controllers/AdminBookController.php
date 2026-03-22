@@ -4,16 +4,24 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class AdminBookController extends Controller
 {
     public function booksPage()
     {
         $books = DB::table('books_store')->orderBy('id', 'desc')->get();
-        $orders = DB::table('book_orders')->orderBy('id', 'desc')->limit(100)->get();
 
         return view('admin.books')->with([
             'books' => $books,
+        ]);
+    }
+
+    public function ordersPage()
+    {
+        $orders = DB::table('book_orders')->orderBy('id', 'desc')->limit(100)->get();
+
+        return view('admin.orders')->with([
             'orders' => $orders,
         ]);
     }
@@ -36,9 +44,16 @@ class AdminBookController extends Controller
         $imageName = null;
         if ($request->hasFile('cover_image') && $request->file('cover_image')->isValid()) {
             $file = $request->file('cover_image');
-            $baseName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-            $imageName = $baseName . '-' . time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('/bookImages'), $imageName);
+            $response = Http::attach(
+                'image', file_get_contents($file->getRealPath()), $file->getClientOriginalName()
+            )->post('https://api.imgbb.com/1/upload', [
+                'key' => '12970868fe9200f5331c2d9579d429ea',
+            ]);
+            if ($response->successful()) {
+                $imageName = $response->json('data.url');
+            } else {
+                return redirect('/dashboard')->withErrors(['cover_image' => 'Cover image ImgBB upload failed.']);
+            }
         }
 
         $pdfFileName = null;
@@ -100,10 +115,17 @@ class AdminBookController extends Controller
 
         if ($request->hasFile('cover_image') && $request->file('cover_image')->isValid()) {
             $file = $request->file('cover_image');
-            $baseName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-            $imageName = $baseName . '-' . time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('/bookImages'), $imageName);
-            $updateData['cover_image'] = $imageName;
+            $response = Http::attach(
+                'image', file_get_contents($file->getRealPath()), $file->getClientOriginalName()
+            )->post('https://api.imgbb.com/1/upload', [
+                'key' => '12970868fe9200f5331c2d9579d429ea',
+            ]);
+            if ($response->successful()) {
+                $imageName = $response->json('data.url');
+                $updateData['cover_image'] = $imageName;
+            } else {
+                return redirect('/dashboard')->withErrors(['cover_image' => 'Cover image ImgBB upload failed.']);
+            }
         }
 
         if ($request->hasFile('pdf_file') && $request->file('pdf_file')->isValid()) {

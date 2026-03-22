@@ -169,8 +169,10 @@ Route::middleware('admin.auth')->group(function () {
 
     Route::get('/edst', [editStory::class,'show']);
     Route::get('/cmntget', [AdminCommentsController::class, 'index']);
+    Route::post('/admin/comments/delete/{type}/{id}', [AdminCommentsController::class, 'destroy']);
 
     Route::get('/admin/books', [AdminBookController::class, 'booksPage']);
+    Route::get('/admin/orders', [AdminBookController::class, 'ordersPage']);
     Route::post('/admin/books', [AdminBookController::class, 'addBook']);
     Route::post('/admin/books/update/{bookId}', [AdminBookController::class, 'updateBook']);
     Route::post('/admin/books/delete/{bookId}', [AdminBookController::class, 'deleteBook']);
@@ -198,4 +200,26 @@ Route::middleware('admin.auth')->group(function () {
     Route::get('/admin/chat/sessions', [MsgController::class, 'sessions']);
     Route::get('/admin/chat/sessions/{chatToken}/messages', [MsgController::class, 'messages']);
     Route::post('/admin/chat/sessions/{chatToken}/messages', [MsgController::class, 'send']);
+});
+
+// Author Related Services
+use App\Http\Controllers\AuthorAuthController;
+use App\Http\Controllers\AuthorDashboardController;
+use App\Http\Controllers\AuthorStoryController;
+
+Route::get('/author/login', [AuthorAuthController::class, 'showLogin'])->name('author.login');
+Route::post('/author/login', [AuthorAuthController::class, 'login']);
+Route::get('/author/signup', [AuthorAuthController::class, 'showSignup']);
+Route::post('/author/signup', [AuthorAuthController::class, 'signup']);
+Route::post('/author/logout', [AuthorAuthController::class, 'logout'])->name('author.logout');
+
+Route::middleware('author.auth')->group(function () {
+    Route::get('/author/dashboard', [AuthorDashboardController::class, 'index'])->name('author.dashboard');
+
+    Route::get('/author/stories', [AuthorStoryController::class, 'index'])->name('author.stories.index');
+    Route::get('/author/stories/create', [AuthorStoryController::class, 'create'])->name('author.stories.create');
+    Route::post('/author/stories', [AuthorStoryController::class, 'store'])->name('author.stories.store');
+    Route::get('/author/stories/{storyId}/edit', [AuthorStoryController::class, 'edit'])->name('author.stories.edit');
+    Route::post('/author/stories/{storyId}', [AuthorStoryController::class, 'update'])->name('author.stories.update');
+    Route::post('/author/stories/{storyId}/delete', [AuthorStoryController::class, 'destroy'])->name('author.stories.delete');
 });

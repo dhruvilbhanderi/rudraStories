@@ -609,13 +609,15 @@ class BookStoreController extends Controller
 
         $myListings = DB::table('book_resale_listings')
             ->join('books_store', 'books_store.id', '=', 'book_resale_listings.book_id')
+            ->leftJoin('usersignupinfo', 'usersignupinfo.uidenkk', '=', 'book_resale_listings.buyer_identity')
             ->where('book_resale_listings.seller_identity', session('usiden'))
             ->select(
                 'book_resale_listings.*',
                 'books_store.title',
                 'books_store.author',
                 'books_store.cover_image',
-                'books_store.book_type'
+                'books_store.book_type',
+                'usersignupinfo.UserName as buyer_username'
             )
             ->orderBy('book_resale_listings.id', 'desc')
             ->get();

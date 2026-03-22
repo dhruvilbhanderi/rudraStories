@@ -37,6 +37,8 @@
         </h4>
     </div>
 
+</div> <!-- Closing .main-content-wrapper -->
+
 </body>
 <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
 <script src="{{asset('js/lk.js')}}"></script>

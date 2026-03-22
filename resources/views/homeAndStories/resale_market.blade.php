@@ -5,6 +5,44 @@
 <x-navbar :nav="$nav" :css="$css" desc="Rudra Stories Resale Market" key="Rudra Stories Resale Market" />
 
 <div class="book-page">
+    <style>
+        /* Premium Overrides for Resale Market Buttons */
+        .book-header .cart-btn {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: #fff;
+            font-weight: 600;
+            padding: 10px 24px;
+            border-radius: 30px;
+            box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.5);
+            border: none;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 14px;
+        }
+        .book-header .cart-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px -5px rgba(59, 130, 246, 0.6);
+        }
+
+        .book-card .resale-buy-btn {
+            padding: 14px 28px !important;
+            font-size: 16px !important;
+            background: linear-gradient(135deg, #10b981, #059669) !important;
+            color: #fff !important;
+            font-weight: 600 !important;
+            border-radius: 12px !important;
+            box-shadow: 0 8px 16px -4px rgba(16, 185, 129, 0.4) !important;
+            border: none !important;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease !important;
+        }
+        .book-card .resale-buy-btn:hover {
+            transform: translateY(-3px) !important;
+            box-shadow: 0 12px 20px -4px rgba(16, 185, 129, 0.5) !important;
+            background: linear-gradient(135deg, #059669, #047857) !important;
+        }
+    </style>
     <div class="book-header">
         <h1>Resale Market</h1>
         <a class="cart-btn" href="/my-orders">My Orders</a>
@@ -38,7 +76,7 @@
                             <td>{{ $mine->title }}</td>
                             <td>Rs. {{ number_format((float) $mine->price, 2) }}</td>
                             <td>{{ strtoupper($mine->status) }}</td>
-                            <td>{{ $mine->buyer_identity ?: '-' }}</td>
+                            <td>{{ $mine->buyer_username ?: '-' }}</td>
                             <td>{{ date('d M Y h:i A', strtotime($mine->created_at)) }}</td>
                         </tr>
                     @endforeach

@@ -48,6 +48,29 @@ $('#da2025').click(function (e) {
         }
     });
 });
+
+$('#da_orders').click(function (e) {
+    e.preventDefault();
+
+    $.ajax({
+        type: "get",
+        url: "/admin/orders",
+        beforeSend: function(){
+            $('#ch10ngcon').append("<div class='loader'></div>");
+        },
+        complete: function(){
+            $('#ch10ngcon').remove("<div class='loader'></div>");
+        },
+        success: function (response) {  
+            $('#ch10ngcon').empty();
+            $('#ch10ngcon').append(response);
+        },
+        error: function () {
+            alert('Error loading orders');
+        }
+    });
+});
+
 $('#da2026').click(function (e) {
     e.preventDefault();
 

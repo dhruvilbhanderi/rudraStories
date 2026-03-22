@@ -1,91 +1,117 @@
+/* Root Theme Variables mapped to our new premium palette */
+:root {
+    --primary: #1d3557;
+    --secondary: #457b9d;
+    --accent: #e63946;
+    --light-bg: #f8fafc;
+    --white: #ffffff;
+    --text-dark: #0f172a;
+    --text-light: #64748b;
+}
 
+body {
+    background: var(--light-bg);
+}
 
-
-
-
-.maincontent{
+.maincontent {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
-    /* background-image: url('../Images/background.png'); */
-    /* border: 2px solid red; */
-    background-image: url("../Images/background.png");
-    background-size: cover;
-    height: 100vh;
-}
-
-.welcome{
+    color: var(--white);
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(29, 53, 87, 0.9)), url("../Images/background.png") center/cover no-repeat;
+    height: calc(100vh - 80px); /* Account for navbar space */
+    width: 100%;
     position: relative;
-    left: 0;
-    transition: all 5s ease-in-out;
-    animation-name: example;
-    animation-duration: 4s;
+    margin-top: -80px; /* pull up behind nav optionally */
 }
-@keyframes example{
-    50%{
-        left: 720px;
-    }
-    100%{
-        left: 1440px;
-        display: none;
-    }
+
+.welcome {
+    position: absolute;
+    top: 90px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 12px;
+    padding: 12px 24px;
+    color: var(--white);
+    font-weight: 500;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    animation: fadeSlide 4s ease-in-out forwards;
+    z-index: 50;
 }
-.maincontent .item{
-    
-    padding: 2rem;
+
+@keyframes fadeSlide {
+    0% { opacity: 0; transform: translateY(-20px); }
+    10% { opacity: 1; transform: translateY(0); }
+    80% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-20px); visibility: hidden; }
+}
+
+.maincontent .item {
+    padding: 3rem;
     text-align: center;
-    /* border: 2px solid yellow; */
-    font-family: 'Poppins', sans-serif;
+    max-width: 800px;
+    z-index: 2;
 }
-.maincontent .item h2,span{
-    
-    margin-bottom: 1rem;
-     
-}
-.maincontent .item span{
-    background-color: #0988a8;
-    padding: 0 1rem;
-    border-radius: 0.5rem;
-}
-.maincontent .item a{
 
-    background-color: #0988a8;
+.maincontent .item h2 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+    text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.maincontent .item h2 span {
+    color: #60a5fa;
+    display: inline-block;
+}
+
+.maincontent .item a {
+    display: inline-block;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: var(--white);
     text-decoration: none;
-    font-size: 2rem;
-    padding: 0 1rem;
-    color: #fff;
-    border-radius: 0.4rem;
-}
-.maincontent .item a:hover{
-
-    background:rgba(0, 0, 0, 0.5);
-    border: 0.1rem solid #fff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 14px 32px;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.5);
+    margin-top: 1rem;
 }
 
+.maincontent .item a:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 25px -5px rgba(59, 130, 246, 0.6);
+}
 
+/* Glassmorphism Quote */
+.mb-wrap {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 20px 40px;
+    text-align: center;
+    max-width: 90%;
+    width: 600px;
+}
 
-.typewriter h1 {
-    color: #0988a8;
-    font-family: monospace;
-    overflow: hidden; /* Ensures the content is not revealed until the animation */
-    border-right: .15em solid orange; /* The typwriter cursor */
-    white-space: nowrap; /* Keeps the content on a single line */
-    margin: 0 auto; /* Gives that scrolling effect as the typing happens */
-    letter-spacing: .15em; /* Adjust as needed */
-    animation: 
-      typing 3.5s steps(30, end),
-      blink-caret .5s step-end infinite;
-  }
-  
-  /* The typing effect */
-  @keyframes typing {
-    from { width: 0 }
-    to { width: 100% }
-  }
-  
-  /* The typewriter cursor effect */
-  @keyframes blink-caret {
-    from, to { border-color: transparent }
-    50% { border-color: orange }
-  }
+.mb-wrap blockquote p {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: #e2e8f0;
+    margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .maincontent .item h2 { font-size: 2.2rem; }
+    .mb-wrap { bottom: 20px; padding: 16px 24px; }
+}

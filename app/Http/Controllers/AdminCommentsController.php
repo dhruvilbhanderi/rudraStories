@@ -47,5 +47,16 @@ class AdminCommentsController extends Controller
             'partCommentCount' => $partComments->count(),
         ]);
     }
+
+    public function destroy($type, $id)
+    {
+        if ($type === 'story') {
+            DB::table('comment_section')->where('id', $id)->delete();
+        } elseif ($type === 'story_part') {
+            DB::table('stry_part_comments')->where('id', $id)->delete();
+        }
+
+        return redirect()->back()->with('success', 'Comment deleted successfully.');
+    }
 }
 

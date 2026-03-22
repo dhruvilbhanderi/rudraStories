@@ -29,6 +29,7 @@
                             <th>Story/Part</th>
                             <th>Comment</th>
                             <th>Date</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -46,6 +47,14 @@
                                 <td>{{ $item->target_title ?? $item->target_identity }}</td>
                                 <td>{{ $item->comment }}</td>
                                 <td>{{ $item->created_at ?? '-' }}</td>
+                                <td>
+                                    <form action="/admin/comments/delete/{{ $item->comment_type }}/{{ $item->id }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this comment?');">
+                                        @csrf
+                                        <button type="submit" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 16px;">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
