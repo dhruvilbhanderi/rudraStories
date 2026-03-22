@@ -20,8 +20,6 @@
 <img src='https://user-images.githubusercontent.com/94969888/204739388-be8a7d1e-0687-49f2-8c5b-cd5bef7d0cfe.png'/>
 <h2>Complete Story</h2>
 <img src='https://user-images.githubusercontent.com/94969888/204754491-7a4f0126-0e9c-448d-89e8-baa0747a925e.png'/>
-<h2>About Writer</h2>
-<img src='https://user-images.githubusercontent.com/94969888/204754532-bb5dae68-4ef2-4cf8-acc5-0eafb369ceb2.png'/>
 <h2>SignUp</h2>
 <img src='https://user-images.githubusercontent.com/94969888/204755066-19636310-8140-4a3e-9e13-408a01f8558f.png'/>
 <h2>LogIn</h2>
