@@ -1,8 +1,19 @@
 
 $('.clos').click(function (e) {
     e.preventDefault();
-    $(".content").toggle();
 
+    // Prefer the new profile upload modal if present
+    var card = $('#upUploadCard');
+    var overlay = $('#upUploadOverlay');
+    if (card.length) {
+        card.toggle();
+        if (overlay.length) {
+            overlay.css('display', card.is(':visible') ? 'flex' : 'none');
+        }
+        return;
+    }
+
+    $(".content").toggle();
 });
 
 $('#frmim00').submit(function (e) {

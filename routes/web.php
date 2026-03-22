@@ -31,6 +31,7 @@ use App\Http\Controllers\BookStoreController;
 use App\Http\Controllers\AdminBookController;
 use App\Http\Controllers\AdminCommentsController;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\AdminProfileController;
 // display index elements 
 Route::get('/', [App\Http\Controllers\IndexController::class, 'idexDisplay']);
 
@@ -173,6 +174,7 @@ Route::middleware('admin.auth')->group(function () {
 
     Route::get('/admin/books', [AdminBookController::class, 'booksPage']);
     Route::get('/admin/orders', [AdminBookController::class, 'ordersPage']);
+    Route::get('/admin/profile', [AdminProfileController::class, 'show']);
     Route::post('/admin/books', [AdminBookController::class, 'addBook']);
     Route::post('/admin/books/update/{bookId}', [AdminBookController::class, 'updateBook']);
     Route::post('/admin/books/delete/{bookId}', [AdminBookController::class, 'deleteBook']);
@@ -206,6 +208,7 @@ Route::middleware('admin.auth')->group(function () {
 use App\Http\Controllers\AuthorAuthController;
 use App\Http\Controllers\AuthorDashboardController;
 use App\Http\Controllers\AuthorStoryController;
+use App\Http\Controllers\AuthorProfileController;
 
 Route::get('/author/login', [AuthorAuthController::class, 'showLogin'])->name('author.login');
 Route::post('/author/login', [AuthorAuthController::class, 'login']);
@@ -215,6 +218,9 @@ Route::post('/author/logout', [AuthorAuthController::class, 'logout'])->name('au
 
 Route::middleware('author.auth')->group(function () {
     Route::get('/author/dashboard', [AuthorDashboardController::class, 'index'])->name('author.dashboard');
+
+    Route::get('/author/profile', [AuthorProfileController::class, 'show'])->name('author.profile');
+    Route::post('/author/profile', [AuthorProfileController::class, 'update'])->name('author.profile.update');
 
     Route::get('/author/stories', [AuthorStoryController::class, 'index'])->name('author.stories.index');
     Route::get('/author/stories/create', [AuthorStoryController::class, 'create'])->name('author.stories.create');

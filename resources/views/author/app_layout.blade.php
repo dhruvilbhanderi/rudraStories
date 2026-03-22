@@ -215,6 +215,9 @@
                 <a href="{{ route('author.stories.create') }}">
                     <i class="fa fa-pencil-square"></i> Write New Story
                 </a>
+                <a href="{{ route('author.profile') }}" class="{{ request()->routeIs('author.profile') ? 'active' : '' }}">
+                    <i class="fa fa-user"></i> Profile
+                </a>
 
                 <a href="/" target="_blank" rel="noreferrer">
                     <i class="fa fa-external-link"></i> View Site
@@ -238,7 +241,11 @@
 
                 @php($author = Auth::guard('author')->user())
                 <div class="ap-user">
-                    <div class="ap-avatar">{{ strtoupper(substr($author->name ?? 'A', 0, 1)) }}</div>
+                    @if (!empty($author->profile_pic))
+                        <img src="/authorProfile/{{ $author->profile_pic }}" alt="Avatar" style="width:34px; height:34px; border-radius: 14px; object-fit: cover; border: 1px solid rgba(255,255,255,0.14);">
+                    @else
+                        <div class="ap-avatar">{{ strtoupper(substr($author->name ?? 'A', 0, 1)) }}</div>
+                    @endif
                     <div style="line-height: 1.1;">
                         <div style="font-weight: 800; font-size: 13px;">{{ $author->name }}</div>
                         <div style="color: var(--muted); font-size: 12px;">{{ $author->email }}</div>
@@ -267,4 +274,3 @@
     @stack('scripts')
 </body>
 </html>
-

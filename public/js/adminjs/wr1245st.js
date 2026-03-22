@@ -138,6 +138,28 @@ $('#da2028').click(function (e) {
     });
 });
 
+$('#da_profile').click(function (e) {
+    e.preventDefault();
+
+    $.ajax({
+        type: "get",
+        url: "/admin/profile",
+        beforeSend: function(){
+            $('#ch10ngcon').append("<div class='loader'></div>");
+        },
+        complete: function(){
+            $('#ch10ngcon').remove("<div class='loader'></div>");
+        },
+        success: function (response) {
+            $('#ch10ngcon').empty();
+            $('#ch10ngcon').append(response);
+        },
+        error: function () {
+            alert('Error loading profile');
+        }
+    });
+});
+
 
     $('#da2030').click(function (e) {
     e.preventDefault();
@@ -319,7 +341,6 @@ function initAdminChat() {
 
     connectWs();
 }
-
 
 
 

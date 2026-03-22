@@ -31,6 +31,7 @@
                     <li id="da2026" class="das"><i class="fa fa-user"></i>Users</li>
                     <li id="da2027" class="das"><i class="fa fa-commenting-o"></i>Messages</li>
                     <li id="da2028" class="das"><i class="fa fa-comments"></i>Comments</li>
+                    <li id="da_profile" class="das"><i class="fa fa-user-circle"></i>Profile</li>
                     <li id="da2029" class="das" onclick="showLogoutDialog()">
                         <i class="fa fa-sign-out"></i>
                         <form method="POST" action="/admin/logout" style="display:none;" id="logoutForm">
@@ -43,10 +44,7 @@
         </div>
         <div class="right">
             <div class="mainhe">
-                <div class="imgf">
-                    <img src="images/aboutimg.jpeg" alt="">
-                </div>
-                
+                <!-- Header image removed (requested) -->
             </div>
 
             <!-- Modern Logout Modal -->

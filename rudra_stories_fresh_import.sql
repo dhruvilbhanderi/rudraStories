@@ -1,4 +1,4 @@
-﻿-- ============================================
+-- ============================================
 -- Rudra Stories - Fresh Database Import (One File)
 -- ============================================
 -- How to use (phpMyAdmin):
@@ -17,6 +17,10 @@
 -- Create Database (if not exists)
 CREATE DATABASE IF NOT EXISTS `rudra_stories` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE `rudra_stories`;
+
+-- Ensure phpMyAdmin imports don't break if NO_BACKSLASH_ESCAPES is enabled
+SET sql_mode = REPLACE(@@sql_mode, 'NO_BACKSLASH_ESCAPES', '');
+SET FOREIGN_KEY_CHECKS = 0;
 
 -- ============================================
 -- Table: usersignupinfo
@@ -203,11 +207,18 @@ CREATE TABLE IF NOT EXISTS `books_store` (
   `description` text,
   `price` decimal(10,2) NOT NULL DEFAULT '0.00',
   `stock` int(11) NOT NULL DEFAULT '0',
+  `access_type` varchar(10) NOT NULL DEFAULT 'paid',
+  `book_type` varchar(10) NOT NULL DEFAULT 'physical',
   `cover_image` varchar(255) DEFAULT NULL,
+  `pdf_file` varchar(255) DEFAULT NULL,
+  `allow_resale` tinyint(1) NOT NULL DEFAULT '1',
+  `resale_price` decimal(10,2) DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `books_store_access_type_idx` (`access_type`),
+  KEY `books_store_book_type_idx` (`book_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
@@ -292,6 +303,50 @@ CREATE TABLE IF NOT EXISTS `book_order_items` (
   PRIMARY KEY (`id`),
   KEY `order_items_order_id_idx` (`order_id`),
   KEY `order_items_book_id_idx` (`book_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================
+-- Table: user_book_access
+-- Description: Access control for digital books
+-- ============================================
+CREATE TABLE IF NOT EXISTS `user_book_access` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_identity` varchar(255) NOT NULL,
+  `book_id` int(11) NOT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `source` varchar(20) NOT NULL DEFAULT 'purchase',
+  `order_id` int(11) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_book_access_user_book_unique` (`user_identity`,`book_id`),
+  KEY `user_book_access_user_identity_idx` (`user_identity`),
+  KEY `user_book_access_book_id_idx` (`book_id`),
+  KEY `user_book_access_order_id_idx` (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================
+-- Table: book_resale_listings
+-- Description: Resale marketplace listings for physical books
+-- ============================================
+CREATE TABLE IF NOT EXISTS `book_resale_listings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `book_id` int(11) NOT NULL,
+  `source_order_item_id` int(11) NOT NULL,
+  `seller_identity` varchar(255) NOT NULL,
+  `seller_username` varchar(255) NOT NULL,
+  `buyer_identity` varchar(255) DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `status` varchar(20) NOT NULL DEFAULT 'active',
+  `sold_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `book_resale_listings_source_item_unique` (`seller_identity`,`source_order_item_id`),
+  KEY `book_resale_listings_book_id_idx` (`book_id`),
+  KEY `book_resale_listings_seller_identity_idx` (`seller_identity`),
+  KEY `book_resale_listings_status_idx` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
@@ -584,3 +639,4 @@ INSERT INTO `books_store` (`title`, `author`, `description`, `price`, `stock`, `
 ('Story Craft Gujarati', 'Dev Team', 'Gujarati storytelling framework for beginners.', 249.00, 30, NULL, 1, NOW(), NOW()),
 ('Epic Tales Collection', 'Rudra Stories', 'A curated collection of readers'' favorite tales.', 499.00, 12, NULL, 1, NOW(), NOW());
 
+SET FOREIGN_KEY_CHECKS = 1;
