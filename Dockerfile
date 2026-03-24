@@ -11,8 +11,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /app
 COPY . .
 
-# Install Laravel dependencies
-RUN composer install --no-dev --optimize-autoloader
+# Install Laravel dependencies (avoid artisan scripts during image build)
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts \
+    && php artisan package:discover --ansi || true
 
 # Permissions
 RUN chmod -R 777 storage bootstrap/cache
@@ -21,4 +22,8 @@ RUN chmod -R 777 storage bootstrap/cache
 RUN php artisan config:clear || true
 RUN php artisan cache:clear || true
 
-CMD php artisan serve --host=0.0.0.0 --port=10000
+# Render listens on $PORT (default 10000 here)
+EXPOSE 10000
+
+# Render sets $PORT at runtime
+CMD ["sh", "-lc", "php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]
