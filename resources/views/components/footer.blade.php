@@ -27,8 +27,8 @@
 
     <div class="footer">
 
-        <h4>Copyright © 2020 - 2030 <a href="/" class="plo200">RudraStories.in</a>. All Rights Reserved. | Designed by <a href="#" class="plo200"> Devn Mishra</a>.
-          
+        <h4>Copyright © 2020 - 2030 <a href="/" class="plo200">RudraStories.in</a>. All Rights Reserved. | Designed by <a href="#" class="plo200"> Sutex Team</a>.
+
         </h4>
         <h4>
           <a href="/PrivacyPolicy" target="_blank" class="plo200">Privacy Policy</a>
@@ -51,7 +51,7 @@
     AOS.init();
 
 AOS.init({
- 
+
   // Settings that can be overridden on per-element basis, by `data-aos-*` attributes:
   offset: 120, // offset (in px) from the original trigger point
   delay: 20, // values from 0 to 3000, with step 50ms

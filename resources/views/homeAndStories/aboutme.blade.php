@@ -3,7 +3,7 @@
     $nav=['commentcn','navbar']
     @endphp
 <x-navbar  :nav="$nav" :css="$css" desc="Rudra Stories || रुद्र की कहानियां"
- key=" Rudra Stories || रुद्र की कहानियां Manish Pandey RUDRA" />
+ key=" Rudra Stories || रुद्र की कहानियां  RUDRA" />
 
 
 
@@ -15,9 +15,9 @@
                  <img src="{{asset('Images/aboutimg.jpeg')}}" alt="writer image">
              </div>
              <div class="name">
-                 <h2>Manish Pandey 'Rudra'</h2>
+                 <h2>Sutex Team</h2>
                  <h3>writer</h3>
-                 <h4>Since 2012</h4>
+                 <h4>Since 2026</h4>
              </div>
          </div>
      </div>
@@ -26,8 +26,8 @@
              <div class="conlink">
                  <div class="contacinfo">
                      <h2>Contact Info</h2>
-                     <h4><span style="color: #e28743">Gmail:</span><span class="min"> manishpandeylava@gmail.com</span></h4>
-                     <h4> <span style="color: #e28743">Mobile No:</span> <span>8887652489</span></h4>
+                     <h4><span style="color: #e28743">Gmail:</span><span class="min"> sutexteam@gmail.com</span></h4>
+                     <h4> <span style="color: #e28743">Mobile No:</span> <span>8347180372</span></h4>
 
                  </div>
                  <div class="links">
@@ -40,16 +40,16 @@
              </div>
              <div class="bio">
                  <h2>About Me</h2>
-                 <p>Born in Balrampur district of Uttar Pradesh, Manish Pandey 'Rudra' has been very fond of story books and comics since childhood. 
+                 <p>Born in Balrampur district of Uttar Pradesh, Manish Pandey 'Rudra' has been very fond of story books and comics since childhood.
                      From the very beginning his inclination was more towards writing. He has written for many blogs, Facebook pages, fan made comics
-                      websites and podcast channels. Also Manish has spread the magic of his writing on the copy for a long time. Able to engage readers 
+                      websites and podcast channels. Also Manish has spread the magic of his writing on the copy for a long time. Able to engage readers
                       with his writing skills,
                       Manish has recently completed his graduation and is working hard to become a writer and teacher in the future.</p>
              </div>
          </div>
      </div>
  </div>
- 
+
  {{-- include footer here  --}}
  <x-footer/>
 

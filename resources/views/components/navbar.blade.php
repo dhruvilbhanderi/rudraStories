@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="{{ $desc }}">
     <meta name="keywords" content="{{ $key }}">
-    <meta name="author" content="Manish Pandey 'Rudra'">
+    <meta name="author" content="Sutex Team">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="icon" href="{{ asset('/webicons/weblogo.png') }}" type="image/png" sizes="25x25">
@@ -16,7 +16,7 @@
 
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    
+
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
@@ -25,7 +25,7 @@
         <script src="{{ asset('js/' . $ite . '.js') }}"></script>
     @endforeach
     <title>Rudra Stories</title>
-    
+
     <script>
         function loader() {
             if (document.readyState == "complete") {
@@ -63,10 +63,10 @@
             z-index: 9999; display: flex; justify-content: center;
             align-items: center; background: #ffffff;
         }
-        
+
         /* Layout Adjustments depending on Login State */
         body { font-family: 'Inter', sans-serif; background: #f8fafc; margin: 0; padding: 0; }
-        
+
         .main-content-wrapper {
             transition: all 0.3s ease;
         }
@@ -102,7 +102,7 @@
                 justify-content: flex-end; align-items: center; padding: 0 24px; z-index: 100;
             }
             .premium-topbar .right-actions { display: flex; align-items: center; gap: 16px; }
-            
+
             .premium-sidebar {
                 position: fixed; top: 0; left: 0; bottom: 0; width: 260px;
                 background: linear-gradient(180deg, var(--primary) 0%, #0f172a 100%);
@@ -115,7 +115,7 @@
             }
             .premium-sidebar .sidebar-logo img { width: 40px; height: 40px; }
             .premium-sidebar .sidebar-logo span { font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 700; color: #fff;}
-            
+
             .premium-sidebar .nav-links { padding: 24px 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
             .premium-sidebar .nav-links a {
                 display: flex; align-items: center; gap: 12px; padding: 12px 16px;
@@ -128,7 +128,7 @@
             .premium-sidebar .nav-links a i { font-size: 18px; width: 24px; text-align: center; }
 
             .main-content-wrapper { margin-left: 260px; padding-top: 70px; min-height: 100vh; }
-            
+
             .proflu img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0; }
             .logout-btn { background: #ef4444; color: #fff; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; transition: 0.2s; }
             .logout-btn:hover { background: #dc2626; }
@@ -249,7 +249,7 @@
             .guest-navbar .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
             .guest-navbar .logo img { width: 45px; height: 45px; }
             .guest-navbar .logo span { font-family: 'Outfit', sans-serif; font-size: 24px; font-weight: 700; color: var(--primary); }
-            
+
             .guest-navbar .nav-links { display: flex; gap: 32px; align-items: center; }
             .guest-navbar .nav-links a {
                 text-decoration: none; color: var(--text-dark); font-weight: 600; font-size: 15px;
@@ -268,7 +268,7 @@
                 border-radius: 20px; font-weight: 600; text-decoration: none; transition: 0.2s;
             }
             .btn-outline:hover { background: var(--primary); color: #fff; }
-            
+
             .btn-fill {
                 background: var(--primary); color: #fff; padding: 10px 24px;
                 border-radius: 20px; font-weight: 600; text-decoration: none; transition: 0.2s;
@@ -278,7 +278,7 @@
             .main-content-wrapper { padding-top: 80px; min-height: 100vh; }
 
             .mobile-menu-btn { display: none; font-size: 24px; color: var(--primary); background:none; border:none; cursor:pointer;}
-            
+
             @media (max-width: 900px) {
                 .guest-navbar .nav-links { display: none; }
                 .guest-navbar .actions { display: none; }

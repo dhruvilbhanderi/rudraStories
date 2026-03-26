@@ -298,6 +298,8 @@ CREATE TABLE IF NOT EXISTS `book_order_items` (
   `quantity` int(11) NOT NULL DEFAULT '1',
   `unit_price` decimal(10,2) NOT NULL DEFAULT '0.00',
   `line_total` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `book_type_snapshot` varchar(50) NOT NULL DEFAULT 'physical',
+  `access_type_snapshot` varchar(50) NOT NULL DEFAULT 'paid',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),

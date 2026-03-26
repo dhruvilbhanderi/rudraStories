@@ -320,6 +320,7 @@ class BookStoreController extends Controller
             }
 
             $razorpayOrder = Http::withBasicAuth($razorpayKey, $razorpaySecret)
+                ->timeout(20)
                 ->asForm()
                 ->post('https://api.razorpay.com/v1/orders', [
                     'amount' => (int) round($total * 100),
@@ -329,7 +330,12 @@ class BookStoreController extends Controller
                 ]);
 
             if (! $razorpayOrder->ok() || ! isset($razorpayOrder['id'])) {
-                throw new \RuntimeException('Unable to create Razorpay order');
+                $detail = (string) ($razorpayOrder->json('error.description') ?? '');
+                if ($detail === '') {
+                    $detail = 'Unable to create Razorpay order';
+                }
+
+                throw new \RuntimeException($detail);
             }
 
             DB::table('book_orders')->where('id', $orderId)->update([
@@ -340,10 +346,11 @@ class BookStoreController extends Controller
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollBack();
+            report($e);
 
             return response()->json([
-                'message' => 'Checkout failed. Please try again.',
-            ], 500);
+                'message' => 'Checkout failed: ' . $e->getMessage(),
+            ], 502);
         }
 
         return response()->json([
@@ -765,6 +772,7 @@ class BookStoreController extends Controller
             ]);
 
             $razorpayOrder = Http::withBasicAuth($razorpayKey, $razorpaySecret)
+                ->timeout(20)
                 ->asForm()
                 ->post('https://api.razorpay.com/v1/orders', [
                     'amount' => (int) round(((float) $listing->price) * 100),
@@ -775,7 +783,12 @@ class BookStoreController extends Controller
                 ]);
 
             if (! $razorpayOrder->ok() || ! isset($razorpayOrder['id'])) {
-                throw new \RuntimeException('Unable to create Razorpay order for resale');
+                $detail = (string) ($razorpayOrder->json('error.description') ?? '');
+                if ($detail === '') {
+                    $detail = 'Unable to create Razorpay order for resale';
+                }
+
+                throw new \RuntimeException($detail);
             }
 
             DB::table('book_orders')->where('id', $orderId)->update([
@@ -786,9 +799,10 @@ class BookStoreController extends Controller
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollBack();
+            report($e);
             return response()->json([
-                'message' => 'Unable to create resale payment order.',
-            ], 500);
+                'message' => 'Unable to create resale payment order: ' . $e->getMessage(),
+            ], 502);
         }
 
         return response()->json([

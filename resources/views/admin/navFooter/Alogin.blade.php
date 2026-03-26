@@ -102,7 +102,7 @@
       font-size: 13px;
     }
     .heart { color: #ef4444; }
-    
+
     /* Background decorators */
     .blob {
       position: absolute;
@@ -135,11 +135,11 @@
   <div class="login-wrapper">
     <h1>Rudra Stories</h1>
     <p>Sign in to Admin Console</p>
-    
+
     @if (session('error'))
       <div class="error-msg">{{ session('error') }}</div>
     @endif
-    
+
     <form method="POST" action="/admin">
       @csrf
       <div class="form-group">
@@ -151,9 +151,9 @@
       <button type="submit" class="btn-login">Login to Dashboard</button>
     </form>
   </div>
-  
+
   <footer>
-    <p>Developed By <span class="heart">&hearts;</span> Devn Mishra</p>
+    <p>Developed By <span class="heart">&hearts;</span> Sutex Team</p>
   </footer>
 </body>
 </html>

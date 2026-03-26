@@ -8,9 +8,9 @@
 <div class="pr452">
 
     <h2 class="head1211">Privacy Policy for Rudra Stories</h2>
-    
+
     <p>At Rudra Stories, accessible from rudrastories.in, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Rudra Stories and how we use it.</p>
-    
+
     <p>If you have additional questions or require more information about our Privacy Policy, do not hesitate to contact us.</p>
 
 <p>This Privacy Policy applies only to our online activities and is valid for visitors to our website with regards to the information that they shared and/or collect in Rudra Stories. This policy is not applicable to any information collected offline or via channels other than this website. Our Privacy Policy was created with the help of the <a href="https://www.privacypolicygenerator.info">Privacy Policy Generator</a>.</p>
@@ -113,7 +113,7 @@
 <h2 class="head1211">Advertising Partners Privacy Policies</h2>
 
 <P>You may consult this list to find the Privacy Policy for each of the advertising partners of Rudra Stories.</p>
-    
+
     <p>Third-party ad servers or ad networks uses technologies like cookies, JavaScript, or Web Beacons that are used in their respective advertisements and links that appear on Rudra Stories, which are sent directly to users' browser. They automatically receive your IP address when this occurs. These technologies are used to measure the effectiveness of their advertising campaigns and/or to personalize the advertising content that you see on websites that you visit.</p>
 
 <p>Note that Rudra Stories has no access to or control over these cookies that are used by third-party advertisers.</p>
@@ -163,7 +163,7 @@
     your acceptance of such change.
 </p>
 <h2 class="head1211">Contact Us</h2>
-<p>Email :- devn5900@gmail.com</p>
-<p>Mobile Number :- 8887652489</p>
+<p>Email :- sutexteam@gmail.com</p>
+<p>Mobile Number :- 8347180372</p>
 </div>
 <x-footer/>

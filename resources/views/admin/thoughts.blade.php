@@ -1,12 +1,12 @@
-<div class="help">  
+<div class="help">
     <div class="helpque blkinv" id="helpque10">
-      
+
       <form action="" method="post" id="hlpfr253">
           <div id="erm"></div>
         <label for="">Your Thought</label>
         <input type="text" name="nm45226" id="n12001">
         @csrf
-         <input type="submit" name="sub120" value="POST" id="s55214" class="ms45snd">
+         <input type="submit" name="sub120" value="POST" id="s55214" class="ms45snd" style="margin-top:20px;">
       </form>
 
     </div>
@@ -16,7 +16,7 @@
       <div class="thgtlist">
         <ul>
           @foreach ($thgt as $item)
-              
+
           <li>
             {{$item->Mainthought}}
           </li>
