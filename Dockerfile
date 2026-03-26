@@ -19,7 +19,6 @@ COPY . .
 
 RUN php artisan package:discover --ansi || true
 
-# ✅ ADD THIS PART (IMPORTANT)
 RUN mkdir -p storage/framework/sessions \
     storage/framework/cache \
     storage/framework/views \
@@ -29,4 +28,4 @@ RUN chmod -R 775 storage bootstrap/cache
 
 EXPOSE 10000
 
-CMD ["sh", "-lc", "php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]
+CMD php -S 0.0.0.0:$PORT -t public
