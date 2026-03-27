@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Str;
 
 class BookStoreController extends Controller
 {
@@ -583,9 +584,20 @@ class BookStoreController extends Controller
             return redirect('/books')->with('book_error', 'Please purchase or claim this book first.');
         }
 
-        $path = public_path('bookPdfs/' . $book->pdf_file);
+        $pdfRef = (string) $book->pdf_file;
+        if (Str::startsWith($pdfRef, ['http://', 'https://'])) {
+            $pdfUrl = preg_replace('/^http:\\/\\//i', 'https://', $pdfRef);
+            return redirect()->away($pdfUrl);
+        }
+
+        $path = public_path('bookPdfs/' . $pdfRef);
         if (! file_exists($path)) {
-            return redirect('/my-library')->with('book_error', 'PDF file not found on server.');
+            $altPath = storage_path('app/public/bookPdfs/' . $pdfRef);
+            if (file_exists($altPath)) {
+                $path = $altPath;
+            } else {
+                return redirect('/my-library')->with('book_error', 'PDF file not found on server.');
+            }
         }
 
         return Response::file($path, [

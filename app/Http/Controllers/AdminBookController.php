@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class AdminBookController extends Controller
 {
@@ -60,8 +62,17 @@ class AdminBookController extends Controller
         if ($request->hasFile('pdf_file') && $request->file('pdf_file')->isValid()) {
             $pdf = $request->file('pdf_file');
             $baseName = pathinfo($pdf->getClientOriginalName(), PATHINFO_FILENAME);
-            $pdfFileName = $baseName . '-' . time() . '.pdf';
-            $pdf->move(public_path('/bookPdfs'), $pdfFileName);
+            $safe = Str::slug((string) $baseName);
+            if ($safe === '') {
+                $safe = 'book';
+            }
+
+            $pdfFileName = $safe . '-' . time() . '.pdf';
+            $dest = public_path('bookPdfs');
+            if (!File::exists($dest)) {
+                File::makeDirectory($dest, 0755, true);
+            }
+            $pdf->move($dest, $pdfFileName);
         }
 
         DB::table('books_store')->insert([
@@ -131,8 +142,17 @@ class AdminBookController extends Controller
         if ($request->hasFile('pdf_file') && $request->file('pdf_file')->isValid()) {
             $pdf = $request->file('pdf_file');
             $baseName = pathinfo($pdf->getClientOriginalName(), PATHINFO_FILENAME);
-            $pdfFileName = $baseName . '-' . time() . '.pdf';
-            $pdf->move(public_path('/bookPdfs'), $pdfFileName);
+            $safe = Str::slug((string) $baseName);
+            if ($safe === '') {
+                $safe = 'book';
+            }
+
+            $pdfFileName = $safe . '-' . time() . '.pdf';
+            $dest = public_path('bookPdfs');
+            if (!File::exists($dest)) {
+                File::makeDirectory($dest, 0755, true);
+            }
+            $pdf->move($dest, $pdfFileName);
             $updateData['pdf_file'] = $pdfFileName;
         }
 

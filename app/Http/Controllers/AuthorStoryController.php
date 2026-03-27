@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 class AuthorStoryController extends Controller
@@ -182,6 +183,26 @@ class AuthorStoryController extends Controller
             return null;
         }
 
+        $imgbbKey = (string) (env('IMGBB_KEY') ?: '12970868fe9200f5331c2d9579d429ea');
+        try {
+            $response = Http::attach(
+                'image',
+                file_get_contents($file->getRealPath()),
+                $file->getClientOriginalName()
+            )->post('https://api.imgbb.com/1/upload', [
+                'key' => $imgbbKey,
+            ]);
+
+            if ($response->successful()) {
+                $url = $response->json('data.url');
+                if (is_string($url) && $url !== '') {
+                    return $url;
+                }
+            }
+        } catch (\Throwable $e) {
+            // fall back to local storage
+        }
+
         $dest = public_path('storyImages');
         if (!File::exists($dest)) {
             File::makeDirectory($dest, 0755, true);
@@ -212,4 +233,3 @@ class AuthorStoryController extends Controller
         return strtoupper(Str::uuid()->toString());
     }
 }
-

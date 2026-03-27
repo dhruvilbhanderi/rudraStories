@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\updatEditedStory;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\File;
 
 class finallyUpdateStory extends Controller
 {
@@ -57,12 +59,36 @@ class finallyUpdateStory extends Controller
                 } else {
 
                     if ($rq->file('stfl4500')->isValid()) {
-                        $name = $rq->file('stfl4500');
-                        $fileName = pathinfo($name->getClientOriginalName(), PATHINFO_FILENAME);
-                        $realimg = $fileName . "-" . time() . "." . $name->getClientOriginalExtension();
-                        $dest = public_path('/storyImages');
-                        $rqs = $name->move($dest, $realimg);
-                        $stryimg = $realimg;
+                        $file = $rq->file('stfl4500');
+
+                        $imgbbKey = (string) (env('IMGBB_KEY') ?: '12970868fe9200f5331c2d9579d429ea');
+                        $stryimg = null;
+                        try {
+                            $response = Http::attach(
+                                'image',
+                                file_get_contents($file->getRealPath()),
+                                $file->getClientOriginalName()
+                            )->post('https://api.imgbb.com/1/upload', [
+                                'key' => $imgbbKey,
+                            ]);
+
+                            if ($response->successful()) {
+                                $stryimg = $response->json('data.url');
+                            }
+                        } catch (\Throwable $e) {
+                            $stryimg = null;
+                        }
+
+                        if ($stryimg === null) {
+                            $fileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                            $realimg = $fileName . "-" . time() . "." . $file->getClientOriginalExtension();
+                            $dest = public_path('/storyImages');
+                            if (!File::exists($dest)) {
+                                File::makeDirectory($dest, 0755, true);
+                            }
+                            $file->move($dest, $realimg);
+                            $stryimg = $realimg;
+                        }
                         $up = updatEditedStory::where('Story_identy', $stiden)
                             ->update([
                                 'story_heading' => $sthd,

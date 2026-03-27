@@ -7,6 +7,8 @@ use App\Models\writeNewStory;
 use tidy;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\File;
 
 class wrtieNewStory extends Controller
 {
@@ -34,13 +36,38 @@ class wrtieNewStory extends Controller
         $mnstcom= htmlspecialchars(trim($rq->mnstcom));
 
         if ($rq->file('stpcim')->isValid()) {
-            $name=$rq->file('stpcim');
-            $fileName = pathinfo($name->getClientOriginalName(), PATHINFO_FILENAME);
-            $realimg = $fileName."-".time().".".$name->getClientOriginalExtension();
-            $dest=public_path('/storyImages');
-            $rqs=$name->move($dest,$realimg);
-            
-          $stryimg= $realimg;
+            $file = $rq->file('stpcim');
+
+            // Prefer persistent storage via ImgBB (Render has ephemeral filesystem / multiple instances)
+            $imgbbKey = (string) (env('IMGBB_KEY') ?: '12970868fe9200f5331c2d9579d429ea');
+            $stryimg = null;
+            try {
+                $response = Http::attach(
+                    'image',
+                    file_get_contents($file->getRealPath()),
+                    $file->getClientOriginalName()
+                )->post('https://api.imgbb.com/1/upload', [
+                    'key' => $imgbbKey,
+                ]);
+
+                if ($response->successful()) {
+                    $stryimg = $response->json('data.url');
+                }
+            } catch (\Throwable $e) {
+                $stryimg = null;
+            }
+
+            // Fallback to local public folder
+            if ($stryimg === null) {
+                $fileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $realimg = $fileName."-".time().".".$file->getClientOriginalExtension();
+                $dest=public_path('/storyImages');
+                if (!File::exists($dest)) {
+                    File::makeDirectory($dest, 0755, true);
+                }
+                $file->move($dest,$realimg);
+                $stryimg= $realimg;
+            }
         }       
 
         $nw->story_heading=$sthd;
