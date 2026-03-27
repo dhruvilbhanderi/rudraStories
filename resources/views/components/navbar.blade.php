@@ -1,3 +1,12 @@
+@props([
+    'css' => [],
+    'nav' => [],
+    'desc' => '',
+    'key' => '',
+    // Logged-in user profile image filename (optional)
+    'data' => null,
+])
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
