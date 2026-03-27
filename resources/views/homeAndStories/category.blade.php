@@ -23,7 +23,7 @@
                 <div class="stry12" data-aos="flip-down">
                     <a href="/catedisp/{{$item->sno}}/{{$item->type_iden}}">
                         <div class="catehdf">
-                            {{-- <img src="{{ asset('Images/4.jpeg') }}" alt=""> --}}
+                            {{-- <img src="{{ asset('images/4.jpeg') }}" alt=""> --}}
                             <div class="catcont">
                                 <h2>{{$item->Story_type}}</h2>
                                 <span><i class="fa fa-clock-o" aria-hidden="true"></i>
@@ -45,4 +45,3 @@
 
 
 <x-footer/>
-

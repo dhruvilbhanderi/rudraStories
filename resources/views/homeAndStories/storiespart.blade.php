@@ -24,7 +24,7 @@
                 <address>
                     <div class="writer">
                         <div class="wrin">
-                            <img src="{{asset('Images/usericon.png')}}" alt="">
+                            <img src="{{ asset('images/usericon.png') }}" alt="">
                             <div class="time">
                                 <p>
                                     By {{$item->written_by}} </p>
@@ -50,7 +50,7 @@
                     </div>
                 </address>
                 <div class="stryimg">
-                    <img src="{{asset('Images/4.jpeg')}}" alt="द इल्युजन">
+                    <img src="{{ asset('images/4.jpeg') }}" alt="द इल्युजन">
                 </div>
                 <div class="stryp">
                     <p>
@@ -89,7 +89,7 @@
                 <div class="cmntimg">
 
                     @if (empty($logup))
-                    <img src="{{ asset('Images/usericon.png') }}" 
+                    <img src="{{ asset('images/usericon.png') }}" 
                     alt="User-Profile-Image">
                     @else
                     <img src="{{ asset('userProfile/'.$logup)}}" alt="">
@@ -118,7 +118,7 @@
             
             <div class="commentsection" data-aos="fade-up">
                     <div class="cmntimg">
-                        <img src="{{asset('Images/usericon.png')}}" alt="">
+                        <img src="{{ asset('images/usericon.png') }}" alt="">
                     </div>
                     <div class="cmntdata">
                         <div class="username">
@@ -137,7 +137,7 @@
                 <div class="commentsection" data-aos="fade-up">
                     <div class="cmntimg">
                         @if (empty($c->images))
-                        <img src="{{ asset('Images/usericon.png') }}" 
+                        <img src="{{ asset('images/usericon.png') }}" 
                         alt="User-Profile-Image">
                         @else
                         <img src="{{ asset('userProfile/' .$c->images)}}" alt="">   
@@ -178,7 +178,7 @@
         
                      <a href="/storiespart/{{$p->part_no}}/{{$p->story_identy}}/{{$p->mainstry_id}}">
                                  <div class="catehd">
-                                     <img src="{{asset('Images/1.jpeg')}}" alt="">
+                                     <img src="{{ asset('images/1.jpeg') }}" alt="">
                                      <div class="catcont">
                                          <h2>{{$p->story_heading}} भाग-{{$p->part_no}}</h2>
                                          <small>{{Str::substr($p->story_desc, 0, 70)}}</small>
@@ -263,4 +263,3 @@
 
 
     <x-footer/>
-

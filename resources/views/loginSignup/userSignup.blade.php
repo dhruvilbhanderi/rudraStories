@@ -12,7 +12,7 @@ key=" Rudra Stories || रुद्र की कहानियां " />
 
     <div class="formsection">
         <div class="formimg">
-            <img src="{{asset('Images/3236267.jpg')}}" alt="img">
+            <img src="{{ asset('images/3236267.jpg') }}" alt="img">
         </div>
         <div class="mainfrm">
 
@@ -126,4 +126,3 @@ key=" Rudra Stories || रुद्र की कहानियां " />
 
 
 <x-footer/>
-

@@ -25,7 +25,7 @@
                  <a href="/all_stories" target="_blank">Read Stories</a>
             </div>
             <div class="imgback" data-aos="fade-down">
-                {{-- <img src="{{asset('Images/background.png')}}" alt=""> --}}
+                {{-- <img src="{{ asset('images/background.png') }}" alt=""> --}}
                 
                 {{-- <section class="main">   --}}
                     <div class="mb-wrap mb-style-2">  
@@ -121,7 +121,7 @@
           <div class="stry1">
             <a href="/catedisp/{{$ct->sno}}/{{$ct->type_iden}}">
              <div class="catehd">
-                  {{-- <img src="{{asset('Images/9.jpeg')}}" alt=""> --}}
+                  {{-- <img src="{{ asset('images/9.jpeg') }}" alt=""> --}}
                 <div class="catcont">
                       <h2>{{$ct->Story_type}}</h2>
                     <span><i class="fa fa-clock-o" aria-hidden="true"></i>

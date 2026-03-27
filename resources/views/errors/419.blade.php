@@ -22,7 +22,7 @@
                 </div>
                 <div class="erim">
 
-                    <img src="{{asset('/Images/error.jpg')}}" alt="">
+                    <img src="{{ asset('/images/error.jpg') }}" alt="">
                 </div>
             </div>
             
@@ -30,4 +30,3 @@
     </div>
 </body>
 </html>
-

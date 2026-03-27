@@ -32,6 +32,27 @@ use App\Http\Controllers\AdminBookController;
 use App\Http\Controllers\AdminCommentsController;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\AdminProfileController;
+
+// Backward compatible asset route (Render/Linux is case-sensitive: /Images != /images)
+Route::get('/Images/{path}', function (string $path) {
+    $base = realpath(public_path('images'));
+    if ($base === false) {
+        abort(404);
+    }
+
+    $candidate = public_path('images/' . $path);
+    $resolved = realpath($candidate);
+
+    if (
+        $resolved === false
+        || !str_starts_with($resolved, $base . DIRECTORY_SEPARATOR)
+        || !is_file($resolved)
+    ) {
+        abort(404);
+    }
+
+    return response()->file($resolved);
+})->where('path', '.*');
 // display index elements 
 Route::get('/', [App\Http\Controllers\IndexController::class, 'idexDisplay']);
 

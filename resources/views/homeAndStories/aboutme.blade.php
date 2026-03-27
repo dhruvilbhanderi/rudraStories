@@ -12,7 +12,7 @@
 
          <div class="about">
              <div class="aboutimg">
-                 <img src="{{asset('Images/aboutimg.jpeg')}}" alt="writer image">
+                 <img src="{{ asset('images/aboutimg.jpeg') }}" alt="writer image">
              </div>
              <div class="name">
                  <h2>Sutex Team</h2>
@@ -52,4 +52,3 @@
 
  {{-- include footer here  --}}
  <x-footer/>
-
