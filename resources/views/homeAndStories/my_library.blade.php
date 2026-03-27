@@ -25,7 +25,13 @@
                 <div class="book-card reveal">
                     <div class="book-cover">
                         @if ($book->cover_image)
-                            <img src="{{ asset('bookImages/' . $book->cover_image) }}" alt="{{ $book->title }}">
+                            @php
+                                $coverImage = (string) $book->cover_image;
+                                $coverSrc = \Illuminate\Support\Str::startsWith($coverImage, ['http://', 'https://'])
+                                    ? preg_replace('/^http:\\/\\//i', 'https://', $coverImage)
+                                    : asset('bookImages/' . $coverImage);
+                            @endphp
+                            <img src="{{ $coverSrc }}" alt="{{ $book->title }}">
                         @else
                             <img src="{{ asset('images/bookbg.jpg') }}" alt="{{ $book->title }}">
                         @endif

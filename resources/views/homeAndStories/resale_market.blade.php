@@ -94,7 +94,13 @@
                 <div class="book-card reveal">
                     <div class="book-cover">
                         @if ($listing->cover_image)
-                            <img src="{{ asset('bookImages/' . $listing->cover_image) }}" alt="{{ $listing->title }}">
+                            @php
+                                $coverImage = (string) $listing->cover_image;
+                                $coverSrc = \Illuminate\Support\Str::startsWith($coverImage, ['http://', 'https://'])
+                                    ? preg_replace('/^http:\\/\\//i', 'https://', $coverImage)
+                                    : asset('bookImages/' . $coverImage);
+                            @endphp
+                            <img src="{{ $coverSrc }}" alt="{{ $listing->title }}">
                         @else
                             <img src="{{ asset('images/bookbg.jpg') }}" alt="{{ $listing->title }}">
                         @endif
