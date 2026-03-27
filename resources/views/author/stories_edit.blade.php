@@ -66,7 +66,13 @@
                 <div class="form-group">
                     <label>Current cover</label>
                     <div style="max-width: 360px;">
-                        <img src="/storyImages/{{ $story->images }}" alt="Cover" style="width:100%; border-radius: 16px; border: 1px solid rgba(255,255,255,0.12);">
+                        @php
+                            $storyImage = (string) ($story->images ?? '');
+                            $storyImageSrc = \Illuminate\Support\Str::startsWith($storyImage, ['http://', 'https://'])
+                                ? preg_replace('/^http:\\/\\//i', 'https://', $storyImage)
+                                : asset('storyImages/' . $storyImage);
+                        @endphp
+                        <img src="{{ $storyImageSrc }}" alt="Cover" style="width:100%; border-radius: 16px; border: 1px solid rgba(255,255,255,0.12);">
                     </div>
                 </div>
             @endif

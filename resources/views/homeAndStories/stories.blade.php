@@ -49,7 +49,13 @@
                     </div>
                 </address>
                 <div class="stryimg">
-                    <img src="{{ asset('storyImages/'.$readstr->images)}}" alt="">
+                    @php
+                        $storyImage = (string) $readstr->images;
+                        $storyImageSrc = \Illuminate\Support\Str::startsWith($storyImage, ['http://', 'https://'])
+                            ? preg_replace('/^http:\\/\\//i', 'https://', $storyImage)
+                            : asset('storyImages/' . $storyImage);
+                    @endphp
+                    <img src="{{ $storyImageSrc }}" alt="">
                 </div>
                 <div class="stryp">
                     <p>
@@ -226,7 +232,13 @@
                             <div class="stryct">
                                 <a href="/stories/{{ $rsty->story_id }}/{{ $rsty->story_identy }}">
                                     <div class="catehd">
-                                        <img src="{{ asset('storyImages/' .$rsty->images)}}" alt="">
+                                        @php
+                                            $storyImage = (string) $rsty->images;
+                                            $storyImageSrc = \Illuminate\Support\Str::startsWith($storyImage, ['http://', 'https://'])
+                                                ? preg_replace('/^http:\\/\\//i', 'https://', $storyImage)
+                                                : asset('storyImages/' . $storyImage);
+                                        @endphp
+                                        <img src="{{ $storyImageSrc }}" alt="">
                                         <div class="catcont">
                                             <h2>{{ $rsty->story_heading }}<span>(none)</span></h2>
                                             <small>{{ Str::substr($rsty->story_desc, 0, 70) }} </small>

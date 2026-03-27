@@ -51,7 +51,13 @@
         
     <div class="allstryshow " data-aos="fade-up" data-aos-anchor-placement="center-bottom">
         <div class="stry1">
-                <img src="{{ asset('storyImages/' .$item->images)}}" alt="">
+                @php
+                    $storyImage = (string) $item->images;
+                    $storyImageSrc = \Illuminate\Support\Str::startsWith($storyImage, ['http://', 'https://'])
+                        ? preg_replace('/^http:\\/\\//i', 'https://', $storyImage)
+                        : asset('storyImages/' . $storyImage);
+                @endphp
+                <img src="{{ $storyImageSrc }}" alt="">
                 </div>
                 <div class="stry1">
                     <div class="stryno1">
@@ -83,7 +89,13 @@
                     
                 <div class="allstryshow " data-aos="fade-down">
                     <div class="stry1">
-                    <img src="{{ asset('storyImages/' .$tp->images)}}" alt="">
+                    @php
+                        $storyImage = (string) $tp->images;
+                        $storyImageSrc = \Illuminate\Support\Str::startsWith($storyImage, ['http://', 'https://'])
+                            ? preg_replace('/^http:\\/\\//i', 'https://', $storyImage)
+                            : asset('storyImages/' . $storyImage);
+                    @endphp
+                    <img src="{{ $storyImageSrc }}" alt="">
                 </div>
                 <div class="stry1">
                     <div class="stryno1">

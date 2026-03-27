@@ -20,7 +20,13 @@
     
 <div class="allstryshow ">
     <div class="stry1">
-                    <img src="{{ asset('storyImages/' .$item->images)}}" alt="">
+                    @php
+                        $storyImage = (string) $item->images;
+                        $storyImageSrc = \Illuminate\Support\Str::startsWith($storyImage, ['http://', 'https://'])
+                            ? preg_replace('/^http:\\/\\//i', 'https://', $storyImage)
+                            : asset('storyImages/' . $storyImage);
+                    @endphp
+                    <img src="{{ $storyImageSrc }}" alt="">
                 </div>
                 <div class="stry1">
                <div class="stryno1">
@@ -44,4 +50,3 @@
 
 {{-- footer here  --}}
 <x-footer/>
-
