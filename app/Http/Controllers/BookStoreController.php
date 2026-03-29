@@ -590,6 +590,9 @@ class BookStoreController extends Controller
             return redirect()->away($pdfUrl);
         }
 
+        $pdfRef = str_replace('\\', '/', $pdfRef);
+        $pdfRef = basename($pdfRef);
+
         $path = public_path('bookPdfs/' . $pdfRef);
         if (! file_exists($path)) {
             $altPath = storage_path('app/public/bookPdfs/' . $pdfRef);

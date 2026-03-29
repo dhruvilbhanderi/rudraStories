@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
@@ -45,17 +44,20 @@ class AdminBookController extends Controller
 
         $imageName = null;
         if ($request->hasFile('cover_image') && $request->file('cover_image')->isValid()) {
-            $file = $request->file('cover_image');
-            $response = Http::attach(
-                'image', file_get_contents($file->getRealPath()), $file->getClientOriginalName()
-            )->post('https://api.imgbb.com/1/upload', [
-                'key' => '12970868fe9200f5331c2d9579d429ea',
-            ]);
-            if ($response->successful()) {
-                $imageName = $response->json('data.url');
-            } else {
-                return redirect('/dashboard')->withErrors(['cover_image' => 'Cover image ImgBB upload failed.']);
+            $image = $request->file('cover_image');
+            $baseName = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+            $safe = Str::slug((string) $baseName);
+            if ($safe === '') {
+                $safe = 'cover';
             }
+
+            $ext = strtolower($image->getClientOriginalExtension() ?: 'jpg');
+            $imageName = $safe . '-' . time() . '-' . Str::random(6) . '.' . $ext;
+            $dest = public_path('bookImages');
+            if (! File::exists($dest)) {
+                File::makeDirectory($dest, 0755, true);
+            }
+            $image->move($dest, $imageName);
         }
 
         $pdfFileName = null;
@@ -92,7 +94,7 @@ class AdminBookController extends Controller
             'updated_at' => now(),
         ]);
 
-        return redirect('/dashboard')->with('admin_book_success', 'Book added.');
+        return redirect('/admin/books')->with('admin_book_success', 'Book added.');
     }
 
     public function updateBook(Request $request, $bookId)
@@ -125,18 +127,21 @@ class AdminBookController extends Controller
         ];
 
         if ($request->hasFile('cover_image') && $request->file('cover_image')->isValid()) {
-            $file = $request->file('cover_image');
-            $response = Http::attach(
-                'image', file_get_contents($file->getRealPath()), $file->getClientOriginalName()
-            )->post('https://api.imgbb.com/1/upload', [
-                'key' => '12970868fe9200f5331c2d9579d429ea',
-            ]);
-            if ($response->successful()) {
-                $imageName = $response->json('data.url');
-                $updateData['cover_image'] = $imageName;
-            } else {
-                return redirect('/dashboard')->withErrors(['cover_image' => 'Cover image ImgBB upload failed.']);
+            $image = $request->file('cover_image');
+            $baseName = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+            $safe = Str::slug((string) $baseName);
+            if ($safe === '') {
+                $safe = 'cover';
             }
+
+            $ext = strtolower($image->getClientOriginalExtension() ?: 'jpg');
+            $imageName = $safe . '-' . time() . '-' . Str::random(6) . '.' . $ext;
+            $dest = public_path('bookImages');
+            if (! File::exists($dest)) {
+                File::makeDirectory($dest, 0755, true);
+            }
+            $image->move($dest, $imageName);
+            $updateData['cover_image'] = $imageName;
         }
 
         if ($request->hasFile('pdf_file') && $request->file('pdf_file')->isValid()) {
@@ -158,13 +163,13 @@ class AdminBookController extends Controller
 
         DB::table('books_store')->where('id', $bookId)->update($updateData);
 
-        return redirect('/dashboard')->with('admin_book_success', 'Book updated.');
+        return redirect('/admin/books')->with('admin_book_success', 'Book updated.');
     }
 
     public function deleteBook($bookId)
     {
         DB::table('books_store')->where('id', $bookId)->delete();
-        return redirect('/dashboard')->with('admin_book_success', 'Book deleted.');
+        return redirect('/admin/books')->with('admin_book_success', 'Book deleted.');
     }
 
     public function updateOrderStatus(Request $request, $orderId)
@@ -180,6 +185,6 @@ class AdminBookController extends Controller
             'updated_at' => now(),
         ]);
 
-        return redirect('/dashboard')->with('admin_book_success', 'Order updated.');
+        return redirect('/admin/orders')->with('admin_book_success', 'Order updated.');
     }
 }
