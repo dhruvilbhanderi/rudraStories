@@ -138,6 +138,52 @@ $('#da2028').click(function (e) {
     });
 });
 
+// Admin Comments: delete confirmation (avoid any premium/paywall popups)
+var __cmntDeleteForm = null;
+
+function __showCmntDeleteDialog() {
+    var overlay = document.getElementById('cmntDeleteOverlay');
+    if (!overlay) {
+        if (__cmntDeleteForm && confirm('Are you sure you want to delete this comment?')) {
+            __cmntDeleteForm.submit();
+        }
+        return;
+    }
+
+    overlay.style.display = 'flex';
+    setTimeout(function () { overlay.classList.add('show'); }, 10);
+}
+
+function __closeCmntDeleteDialog() {
+    var overlay = document.getElementById('cmntDeleteOverlay');
+    if (!overlay) return;
+
+    overlay.classList.remove('show');
+    setTimeout(function () { overlay.style.display = 'none'; }, 300);
+    __cmntDeleteForm = null;
+}
+
+$(document).on('click', '.cmnt-delete-btn', function (e) {
+    e.preventDefault();
+    __cmntDeleteForm = $(this).closest('form')[0] || null;
+    __showCmntDeleteDialog();
+});
+
+$(document).on('click', '#cmntDeleteCancel', function (e) {
+    e.preventDefault();
+    __closeCmntDeleteDialog();
+});
+
+$(document).on('click', '#cmntDeleteConfirm', function (e) {
+    e.preventDefault();
+    if (__cmntDeleteForm) __cmntDeleteForm.submit();
+    __closeCmntDeleteDialog();
+});
+
+$(document).on('click', '#cmntDeleteOverlay', function (e) {
+    if (e.target === this) __closeCmntDeleteDialog();
+});
+
 $('#da_profile').click(function (e) {
     e.preventDefault();
 
@@ -341,6 +387,5 @@ function initAdminChat() {
 
     connectWs();
 }
-
 
 
