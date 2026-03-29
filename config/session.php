@@ -18,7 +18,9 @@ return [
     |
     */
 
-    'driver' => env('SESSION_DRIVER', 'file'),
+    // In hosted environments with multiple instances / ephemeral disks (e.g. Render),
+    // the "file" driver can cause CSRF/session issues. Default to "cookie" outside local.
+    'driver' => env('SESSION_DRIVER', env('APP_ENV') === 'local' ? 'file' : 'cookie'),
 
     /*
     |--------------------------------------------------------------------------
