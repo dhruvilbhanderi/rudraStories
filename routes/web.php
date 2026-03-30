@@ -218,6 +218,7 @@ Route::middleware('admin.auth')->group(function () {
     });
     Route::post('/thgt',[ThoughtsController::class,'show'] );
     Route::get('/ussr', [adminUsers::class,'show']);
+    Route::post('/admin/users/{sNo}/status', [adminUsers::class,'updateStatus']);
 
     Route::get('/msg', [MsgController::class,'show']);
     Route::get('/admin/chat/sessions', [MsgController::class, 'sessions']);
